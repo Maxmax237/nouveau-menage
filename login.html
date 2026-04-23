@@ -2,6 +2,257 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MenagePro - Admin Login</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .login-container h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .login-container h1 i {
+            color: #667eea;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .login-container input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        .login-container button:hover {
+            transform: translateY(-2px);
+        }
+        .login-container button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .error {
+            color: #ef4444;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .success {
+            color: #10b981;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .info {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+            background: #f3f4f6;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .loading {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1><i>🔐</i> MenagePro Admin</h1>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email admin" required>
+            <input type="password" id="password" placeholder="Mot de passe" required>
+            <button type="submit" id="loginBtn">Se connecter</button>
+        </form>
+        <div id="message" class="error"></div>
+        <div class="info">
+            💡 La première connexion créera automatiquement votre compte admin.<br>
+            📧 Utilisez l'email et le mot de passe de votre choix.
+        </div>
+    </div>
+
+    <script type="module">
+        // ============================================================
+        // 🔧 REMPLACE CES VALEURS PAR TES VRAIES CLÉS FIREBASE !!!
+        // ============================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBv_xxxxxx",           // ← Remplace par TA vraie clé API
+            authDomain: "ton-projet.firebaseapp.com",  // ← Ton domaine Firebase
+            projectId: "ton-projet-id",           // ← Ton Project ID
+            storageBucket: "ton-projet.appspot.com",
+            messagingSenderId: "123456789",       // ← Ton Sender ID
+            appId: "1:123456789:web:abcdef"       // ← Ton App ID
+        };
+        // ============================================================
+        
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // Initialiser Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const messageDiv = document.getElementById('message');
+
+        // Fonction pour afficher les messages
+        function showMessage(text, type = 'error') {
+            messageDiv.textContent = text;
+            messageDiv.className = type;
+            setTimeout(() => {
+                if (messageDiv.className === type) {
+                    messageDiv.textContent = '';
+                }
+            }, 5000);
+        }
+
+        // Fonction principale de connexion/création
+        async function handleLogin(email, password) {
+            // Désactiver le bouton pendant l'opération
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Connexion en cours...';
+            
+            try {
+                // ÉTAPE 1 : Essayer de se connecter
+                console.log('Tentative de connexion...');
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log('Connecté avec succès !');
+                showMessage('✅ Connexion réussie ! Redirection...', 'success');
+                
+                // Stocker l'état de connexion
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                sessionStorage.setItem('adminEmail', email);
+                
+                // Rediriger vers l'admin
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+                
+            } catch (error) {
+                console.log('Erreur:', error.code);
+                
+                // ÉTAPE 2 : Si l'utilisateur n'existe pas, le créer
+                if (error.code === 'auth/user-not-found') {
+                    console.log('Utilisateur inexistant, création du compte...');
+                    showMessage('📝 Création de votre compte admin...', 'success');
+                    
+                    try {
+                        // Créer le compte
+                        const newUser = await createUserWithEmailAndPassword(auth, email, password);
+                        console.log('Compte créé avec succès !');
+                        showMessage('✅ Compte admin créé automatiquement ! Connexion en cours...', 'success');
+                        
+                        // Stocker l'état
+                        sessionStorage.setItem('adminLoggedIn', 'true');
+                        sessionStorage.setItem('adminEmail', email);
+                        
+                        // Rediriger après création
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                        
+                    } catch (createError) {
+                        console.error('Erreur création:', createError);
+                        // Gérer les erreurs de création
+                        if (createError.code === 'auth/weak-password') {
+                            showMessage('❌ Mot de passe trop faible (minimum 6 caractères)');
+                        } else if (createError.code === 'auth/invalid-email') {
+                            showMessage('❌ Email invalide');
+                        } else if (createError.code === 'auth/email-already-exists') {
+                            showMessage('❌ Un compte existe déjà avec cet email. Utilisez le bon mot de passe.');
+                        } else {
+                            showMessage('❌ Erreur création compte: ' + createError.message);
+                        }
+                    }
+                    
+                } else if (error.code === 'auth/wrong-password') {
+                    showMessage('❌ Mot de passe incorrect');
+                } else if (error.code === 'auth/invalid-email') {
+                    showMessage('❌ Format d\'email invalide');
+                } else if (error.code === 'auth/too-many-requests') {
+                    showMessage('❌ Trop de tentatives. Veuillez réessayer plus tard.');
+                } else {
+                    showMessage('❌ Erreur: ' + error.message);
+                }
+            } finally {
+                // Réactiver le bouton
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Se connecter';
+            }
+        }
+
+        // Écouter l'événement de soumission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // Validation de base
+            if (!email || !password) {
+                showMessage('❌ Veuillez remplir tous les champs');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('❌ Le mot de passe doit contenir au moins 6 caractères');
+                return;
+            }
+            
+            // Lancer la connexion/création
+            await handleLogin(email, password);
+        });
+        
+        // Vérifier si déjà connecté (optionnel)
+        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+            // Rediriger automatiquement vers admin
+            window.location.href = 'index.html';
+        }
+        
+        console.log('Page de login prête - Création auto de compte activée');
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MenagePro - Admin Login</title>
     <link rel="stylesheet" href="style.css">
