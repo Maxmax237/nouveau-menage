@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MenagePro - Inscription Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            border-left: 4px solid #c33;
+        }
+
+        .success {
+            background: #efe;
+            color: #3c3;
+            border-left: 4px solid #3c3;
+        }
+
+        .info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
+        .strength-weak { color: #f44336; }
+        .strength-medium { color: #ff9800; }
+        .strength-strong { color: #4caf50; }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>📝 Créer un compte Admin</h1>
+        <div class="subtitle">Inscrivez-vous pour accéder au tableau de bord</div>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label>Nom complet</label>
+                <input type="text" id="fullName" placeholder="Jean Dupont" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" placeholder="admin@exemple.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="password" placeholder="Au moins 6 caractères" required>
+                <div class="password-strength" id="passwordStrength"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Confirmer le mot de passe</label>
+                <input type="password" id="confirmPassword" placeholder="Retapez votre mot de passe" required>
+            </div>
+
+            <div class="form-group">
+                <label>Rôle</label>
+                <select id="role">
+                    <option value="admin">Administrateur</option>
+                    <option value="super_admin">Super Administrateur</option>
+                </select>
+            </div>
+
+            <button type="submit">Créer mon compte</button>
+        </form>
+
+        <div id="message" class="message" style="display: none;"></div>
+
+        <div class="login-link">
+            Déjà un compte ? <a href="login.html">Se connecter</a>
+        </div>
+    </div>
+
+    <script>
+        // Fonction pour évaluer la force du mot de passe
+        function checkPasswordStrength(password) {
+            const strengthDiv = document.getElementById('passwordStrength');
+            if (password.length === 0) {
+                strengthDiv.textContent = '';
+                return;
+            }
+            
+            let strength = 0;
+            if (password.length >= 6) strength++;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            if (strength <= 2) {
+                strengthDiv.textContent = '🔴 Faible';
+                strengthDiv.className = 'password-strength strength-weak';
+            } else if (strength <= 4) {
+                strengthDiv.textContent = '🟡 Moyen';
+                strengthDiv.className = 'password-strength strength-medium';
+            } else {
+                strengthDiv.textContent = '🟢 Fort';
+                strengthDiv.className = 'password-strength strength-strong';
+            }
+        }
+
+        // Écouter les changements du mot de passe
+        document.getElementById('password').addEventListener('input', (e) => {
+            checkPasswordStrength(e.target.value);
+        });
+
+        // Gestion de l'inscription
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const role = document.getElementById('role').value;
+            
+            const messageDiv = document.getElementById('message');
+            
+            // Validations
+            if (!fullName || !email || !password) {
+                showMessage('Veuillez remplir tous les champs', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showMessage('Les mots de passe ne correspondent pas', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('Le mot de passe doit contenir au moins 6 caractères', 'error');
+                return;
+            }
+            
+            // Récupérer les admins existants
+            let admins = JSON.parse(localStorage.getItem('menagepro_admins') || '[]');
+            
+            // Vérifier si l'email existe déjà
+            if (admins.some(admin => admin.email === email)) {
+                showMessage('Cet email est déjà utilisé. Veuillez vous connecter.', 'error');
+                return;
+            }
+            
+            // Créer le nouvel administrateur
+            const newAdmin = {
+                id: Date.now(),
+                fullName: fullName,
+                email: email,
+                password: password, // ⚠️ En production, hash le mot de passe !
+                role: role,
+                createdAt: new Date().toISOString(),
+                status: 'active'
+            };
+            
+            // Ajouter à la liste
+            admins.push(newAdmin);
+            localStorage.setItem('menagepro_admins', JSON.stringify(admins));
+            
+            // Connecter automatiquement
+            sessionStorage.setItem('menagepro_current_admin', JSON.stringify({
+                id: newAdmin.id,
+                fullName: newAdmin.fullName,
+                email: newAdmin.email,
+                role: newAdmin.role
+            }));
+            
+            showMessage('✅ Compte créé avec succès ! Redirection...', 'success');
+            
+            // Rediriger vers l'admin
+            setTimeout(() => {
+                window.location.href = 'admin-dashboard.html';
+            }, 1500);
+        });
+        
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Vérifier si déjà connecté
+        const currentAdmin = sessionStorage.getItem('menagepro_current_admin');
+        if (currentAdmin) {
+            window.location.href = 'admin-dashboard.html';
+        }
+    </script>
+</body>
+</html>

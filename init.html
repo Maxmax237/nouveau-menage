@@ -1,0 +1,17 @@
+// Créer un super admin par défaut
+const defaultAdmin = {
+    id: 1,
+    fullName: "Super Admin",
+    email: "super@menagepro.com",
+    password: "admin123",
+    role: "super_admin",
+    status: "active",
+    createdAt: new Date().toISOString()
+};
+
+let admins = JSON.parse(localStorage.getItem('menagepro_admins') || '[]');
+if (!admins.some(a => a.email === "super@menagepro.com")) {
+    admins.push(defaultAdmin);
+    localStorage.setItem('menagepro_admins', JSON.stringify(admins));
+    console.log("✅ Super admin créé : super@menagepro.com / admin123");
+}
