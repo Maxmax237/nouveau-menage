@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MenagePro - Admin Login</title>
     <link rel="stylesheet" href="style.css">
     <style>
@@ -60,29 +60,40 @@
             font-size: 14px;
             color: #666;
         }
+        .demo-badge {
+            background: #fef3c7;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h1>🔐 MenagePro Admin</h1>
+        
+        <div class="demo-badge">
+            ⚡ Mode Démo Actif (sans Firebase Auth)
+        </div>
+        
         <form id="loginForm">
-            <input type="email" id="email" placeholder="Email admin" required>
-            <input type="password" id="password" placeholder="Mot de passe" required>
+            <input type="email" id="email" placeholder="Email admin" value="admin@menagepro.com" required>
+            <input type="password" id="password" placeholder="Mot de passe" value="admin123" required>
             <button type="submit">Se connecter</button>
         </form>
         <div id="errorMsg" class="error"></div>
         <div class="info">
-            ⚠️ Compte démo : admin@menagepro.cm / admin123<br>
-            (À changer après première connexion)
+            🔐 Compte démo : admin@menagepro.com / admin123<br>
+            ⚡ Connexion en local uniquement
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
     <script type="module">
+        // Configuration Firebase (pour Firestore seulement, pas Auth)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        // Configuration Firebase (à remplacer par TES identifiants)
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        // TA configuration Firebase (à remplacer)
         const firebaseConfig = {
             apiKey: "TA_CLE_API",
             authDomain: "TON_PROJET.firebaseapp.com",
@@ -91,24 +102,30 @@
             messagingSenderId: "TON_SENDER_ID",
             appId: "TON_APP_ID"
         };
-
+        
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        const db = getFirestore(app);
+        
+        // Stocker db globalement pour admin.js
+        window.db = db;
+        
+        // LOGIN SANS FIREBASE AUTH (mode démo)
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMsg');
             
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
+            // Identifiants par défaut
+            if (email === 'admin@menagepro.com' && password === 'admin123') {
+                // Stocker dans sessionStorage pour admin.js
+                sessionStorage.setItem('isAdminLoggedIn', 'true');
+                sessionStorage.setItem('adminEmail', email);
                 window.location.href = 'index.html';
-            } catch (error) {
+            } else {
                 errorDiv.textContent = '❌ Email ou mot de passe incorrect';
-                console.error(error);
             }
         });
     </script>
 </body>
-</html>kk
+</html>
