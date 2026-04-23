@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "deploy:netlify": "netlify deploy --prod",
+    "deploy:vercel": "vercel --prod",
+    "build": "echo 'No build needed'"
+  }
+}
