@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MenagePro - Mon Espace Candidate</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo h2 {
+            font-size: 24px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-en_attente { background: #ff9800; color: white; }
+        .status-approuvee { background: #4caf50; color: white; }
+        .status-refusee { background: #f44336; color: white; }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            background: white;
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 80px;
+            z-index: 99;
+        }
+
+        .nav-tabs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+            gap: 5px;
+        }
+
+        .nav-tab {
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .nav-tab:hover {
+            color: #667eea;
+        }
+
+        .nav-tab.active {
+            color: #667eea;
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #667eea;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* Cards */
+        .welcome-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .info-card h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-label {
+            font-weight: 600;
+            width: 180px;
+            color: #666;
+        }
+
+        .info-value {
+            flex: 1;
+            color: #333;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 13px;
+        }
+
+        /* Missions */
+        .mission-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border-left: 4px solid #667eea;
+        }
+
+        .mission-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .mission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .mission-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .mission-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-pending { background: #fff3e0; color: #f57c00; }
+        .status-accepted { background: #e8f5e9; color: #4caf50; }
+        .status-completed { background: #e3f2fd; color: #1976d2; }
+        .status-cancelled { background: #ffebee; color: #f44336; }
+
+        .mission-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .mission-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .mission-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #da190b;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 1001;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Calendrier */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .calendar-day {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .calendar-day:hover {
+            background: #e3f2fd;
+            transform: scale(1.05);
+        }
+
+        .calendar-day.has-mission {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+        }
+
+        .calendar-day-number {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .info-row {
+                flex-direction: column;
+            }
+            
+            .info-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            
+            .mission-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .nav-tabs {
+                padding: 0 10px;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <h2>🧹 MenagePro</h2>
+            <p>Espace candidate professionnelle</p>
+        </div>
+        <div class="user-info">
+            <span id="userName"></span>
+            <span class="status-badge" id="statusBadge"></span>
+            <button class="logout-btn" onclick="logout()">🚪 Déconnexion</button>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="nav-tabs-container">
+            <button class="nav-tab active" data-tab="dashboard">📊 Tableau de bord</button>
+            <button class="nav-tab" data-tab="missions">📋 Mes missions</button>
+            <button class="nav-tab" data-tab="calendar">📅 Planning</button>
+            <button class="nav-tab" data-tab="profile">👤 Mon profil</button>
+            <button class="nav-tab" data-tab="documents">📄 Documents</button>
+            <button class="nav-tab" data-tab="training">🎓 Formations</button>
+            <button class="nav-tab" data-tab="messages">💬 Messages</button>
+            <button class="nav-tab" data-tab="earnings">💰 Revenus</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Dashboard Tab -->
+        <div id="dashboardTab" class="tab-pane active">
+            <div class="welcome-card" id="welcomeCard">
+                <h2 id="welcomeTitle"></h2>
+                <p id="welcomeMessage"></p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="missionsCount">0</div>
+                    <div class="stat-label">Missions complétées</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="pendingMissions">0</div>
+                    <div class="stat-label">Missions en cours</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="rating">0</div>
+                    <div class="stat-label">⭐ Note moyenne</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalEarnings">0</div>
+                    <div class="stat-label">💰 Total gagné</div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3>📢 Annonces récentes</h3>
+                <div id="announcements"></div>
+            </div>
+
+            <div class="info-card">
+                <h3>⭐ Derniers avis clients</h3>
+                <div id="reviews"></div>
+            </div>
+        </div>
+
+        <!-- Missions Tab -->
+        <div id="missionsTab" class="tab-pane">
+            <div class="info-card">
+                <h3>📋 Toutes mes missions</h3>
+                <div id="missionsList"></div>
+            </div>
+        </div>
+
+        <!-- Calendar Tab -->
+        <div id="calendarTab" class="tab-pane">
+            <div class="info-card">
+                <h3>📅 Mon planning</h3>
+                <div id="calendar"></div>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profileTab" class="tab-pane">
+            <div class="info-card">
+                <h3>📋 Mon profil</h3>
+                <div id="profileInfo"></div>
+                <button class="btn btn-primary" onclick="openEditProfileModal()" style="margin-top: 20px;">✏️ Modifier mon profil</button>
+            </div>
+
+            <div class="info-card">
+                <h3>📍 Mes disponibilités</h3>
+                <div id="disponibilitesInfo"></div>
+                <button class="btn btn-primary" onclick="openEditDisponibilitesModal()" style="margin-top: 20px;">✏️ Modifier mes disponibilités</button>
+            </div>
+
+            <div class="info-card">
+                <h3>⭐ Mes compétences</h3>
+                <div id="competencesInfo"></div>
+                <button class="btn btn-primary" onclick="openEditCompetencesModal()" style="margin-top: 20px;">✏️ Modifier mes compétences</button>
+            </div>
+        </div>
+
+        <!-- Documents Tab -->
+        <div id="documentsTab" class="tab-pane">
+            <div class="info-card">
+                <h3>📄 Mes documents</h3>
+                <div id="documentsList"></div>
+                <button class="btn btn-primary" onclick="openAddDocumentModal()" style="margin-top: 20px;">➕ Ajouter un document</button>
+            </div>
+        </div>
+
+        <!-- Training Tab -->
+        <div id="trainingTab" class="tab-pane">
+            <div class="info-card">
+                <h3>🎓 Formations disponibles</h3>
+                <div id="trainingsList"></div>
+            </div>
+        </div>
+
+        <!-- Messages Tab -->
+        <div id="messagesTab" class="tab-pane">
+            <div class="info-card">
+                <h3>💬 Messages avec l'administration</h3>
+                <div id="messagesList"></div>
+                <button class="btn btn-primary" onclick="openSendMessageModal()" style="margin-top: 20px;">✏️ Nouveau message</button>
+            </div>
+        </div>
+
+        <!-- Earnings Tab -->
+        <div id="earningsTab" class="tab-pane">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="monthEarnings">0</div>
+                    <div class="stat-label">Ce mois-ci</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="weekEarnings">0</div>
+                    <div class="stat-label">Cette semaine</div>
+                </div>
+            </div>
+            <div class="info-card">
+                <h3>💰 Historique des paiements</h3>
+                <div id="paymentsHistory"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <h3>✏️ Modifier mon profil</h3>
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label>Nom complet</label>
+                    <input type="text" id="editFullName" required>
+                </div>
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <input type="tel" id="editPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>Adresse</label>
+                    <textarea id="editAddress" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Présentation</label>
+                    <textarea id="editBio" rows="4"></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editProfileModal')">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Disponibilites Modal -->
+    <div id="editDisponibilitesModal" class="modal">
+        <div class="modal-content">
+            <h3>📍 Modifier mes disponibilités</h3>
+            <form id="editDisponibilitesForm">
+                <div class="form-group">
+                    <label>Jours disponibles</label>
+                    <div id="dispoDays"></div>
+                </div>
+                <div class="form-group">
+                    <label>Plage horaire</label>
+                    <select id="editTimeSlot">
+                        <option value="Matin (8h-12h)">Matin (8h-12h)</option>
+                        <option value="Après-midi (13h-17h)">Après-midi (13h-17h)</option>
+                        <option value="Soirée (18h-22h)">Soirée (18h-22h)</option>
+                        <option value="Flexible">Flexible</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editDisponibilitesModal')">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Competences Modal -->
+    <div id="editCompetencesModal" class="modal">
+        <div class="modal-content">
+            <h3>⭐ Modifier mes compétences</h3>
+            <form id="editCompetencesForm">
+                <div class="form-group">
+                    <label>Compétences</label>
+                    <div id="competencesCheckboxes"></div>
+                </div>
+                <div class="form-group">
+                    <label>Taux horaire (€/h)</label>
+                    <input type="number" id="editHourlyRate" step="0.5" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editCompetencesModal')">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Send Message Modal -->
+    <div id="sendMessageModal" class="modal">
+        <div class="modal-content">
+            <h3>✏️ Nouveau message</h3>
+            <form id="sendMessageForm">
+                <div class="form-group">
+                    <label>Objet</label>
+                    <input type="text" id="messageSubject" required>
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea id="messageContent" rows="5" required></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">📤 Envoyer</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('sendMessageModal')">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentMaman = null;
+        let mamanData = null;
+
+        // Données simulées
+        let missions = [];
+        let messages = [];
+        let payments = [];
+        let documents = [];
+        let trainings = [
+            { id: 1, title: "Nettoyage écologique", duration: "2h", status: "disponible" },
+            { id: 2, title: "Repassage professionnel", duration: "1.5h", status: "disponible" },
+            { id: 3, title: "Gestion du temps", duration: "1h", status: "complété" }
+        ];
+
+        // Initialisation
+        function init() {
+            loadMamansData();
+            loadMissions();
+            loadMessages();
+            loadPayments();
+            loadDocuments();
+            setupEventListeners();
+            renderCurrentTab();
+        }
+
+        function loadMamansData() {
+            const mamanStr = sessionStorage.getItem('menagepro_current_maman');
+            if (!mamanStr) {
+                window.location.href = 'login-maman.html';
+                return;
+            }
+            currentMaman = JSON.parse(mamanStr);
+            let mamans = JSON.parse(localStorage.getItem('menagepro_mamans') || '[]');
+            mamanData = mamans.find(m => m.id === currentMaman.id);
+            if (!mamanData) {
+                logout();
+                return;
+            }
+        }
+
+        function loadMissions() {
+            let allMissions = JSON.parse(localStorage.getItem('menagepro_missions') || '[]');
+            missions = allMissions.filter(m => m.mamanId === mamanData.id);
+        }
+
+        function loadMessages() {
+            let allMessages = JSON.parse(localStorage.getItem('menagepro_messages') || '[]');
+            messages = allMessages.filter(m => m.mamanId === mamanData.id);
+        }
+
+        function loadPayments() {
+            let allPayments = JSON.parse(localStorage.getItem('menagepro_payments') || '[]');
+            payments = allPayments.filter(p => p.mamanId === mamanData.id);
+        }
+
+        function loadDocuments() {
+            let allDocs = JSON.parse(localStorage.getItem('menagepro_documents') || '[]');
+            documents = allDocs.filter(d => d.mamanId === mamanData.id);
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    const tabId = tab.dataset.tab;
+                    renderTab(tabId);
+                });
+            });
+        }
+
+        function renderCurrentTab() {
+            const activeTab = document.querySelector('.nav-tab.active').dataset.tab;
+            renderTab(activeTab);
+        }
+
+        function renderTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(`${tabId}Tab`).classList.add('active');
+            
+            switch(tabId) {
+                case 'dashboard': renderDashboard(); break;
+                case 'missions': renderMissions(); break;
+                case 'calendar': renderCalendar(); break;
+                case 'profile': renderProfile(); break;
+                case 'documents': renderDocuments(); break;
+                case 'training': renderTrainings(); break;
+                case 'messages': renderMessages(); break;
+                case 'earnings': renderEarnings(); break;
+            }
+        }
+
+        function renderDashboard() {
+            document.getElementById('userName').textContent = mamanData.fullName;
+            const statusBadge = document.getElementById('statusBadge');
+            statusBadge.textContent = mamanData.status === 'en_attente' ? '📝 En attente' : 
+                                      (mamanData.status === 'approuvee' ? '✅ Validée' : '❌ Refusée');
+            statusBadge.className = `status-badge status-${mamanData.status}`;
+
+            const welcomeTitle = document.getElementById('welcomeTitle');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            
+            if (mamanData.status === 'en_attente') {
+                welcomeTitle.textContent = '👋 Bonjour ' + mamanData.fullName.split(' ')[0];
+                welcomeMessage.innerHTML = 'Votre candidature est en cours d\'examen. Nous reviendrons vers vous sous 48h.';
+            } else if (mamanData.status === 'approuvee') {
+                welcomeTitle.textContent = '🎉 Félicitations ' + mamanData.fullName.split(' ')[0] + ' !';
+                welcomeMessage.innerHTML = 'Votre profil est actif ! Consultez les missions disponibles et commencez à travailler.';
+            } else {
+                welcomeTitle.textContent = '😔 Désolée ' + mamanData.fullName.split(' ')[0];
+                welcomeMessage.innerHTML = 'Votre candidature n\'a pas été retenue. Contactez-nous pour plus d\'informations.';
+            }
+
+            const completedMissions = missions.filter(m => m.status === 'completed').length;
+            const pendingMissions = missions.filter(m => m.status === 'accepted' || m.status === 'pending').length;
+            const totalEarned = payments.reduce((sum, p) => sum + p.amount, 0);
+            const avgRating = mamanData.rating || 0;
+
+            document.getElementById('missionsCount').textContent = completedMissions;
+            document.getElementById('pendingMissions').textContent = pendingMissions;
+            document.getElementById('rating').textContent = avgRating.toFixed(1);
+            document.getElementById('totalEarnings').textContent = totalEarned + ' €';
+
+            // Annonces
+            const announcements = [
+                "📢 Nouvelle formation disponible : Nettoyage écologique",
+                "🎁 Prime de parrainage : 50€ pour chaque amie recommandée",
+                "⚠️ Pensez à mettre à jour vos disponibilités"
+            ];
+            document.getElementById('announcements').innerHTML = announcements.map(a => `<p style="padding: 10px 0;">${a}</p>`).join('');
+
+            // Avis
+            const reviews = [
+                { author: "Client 1", rating: 5, comment: "Excellent travail !" },
+                { author: "Client 2", rating: 4, comment: "Très professionnelle" }
+            ];
+            document.getElementById('reviews').innerHTML = reviews.map(r => `
+                <div style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                    <strong>${r.author}</strong>
+                    <div class="rating-stars">${'⭐'.repeat(r.rating)}</div>
+                    <p>${r.comment}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderMissions() {
+            const missionsList = document.getElementById('missionsList');
+            if (missions.length === 0) {
+                missionsList.innerHTML = '<div class="empty-state">📭 Aucune mission pour le moment</div>';
+                return;
+            }
+            
+            missionsList.innerHTML = missions.map(mission => `
+                <div class="mission-card">
+                    <div class="mission-header">
+                        <div class="mission-title">${mission.title || 'Mission de ménage'}</div>
+                        <span class="mission-status status-${mission.status || 'pending'}">${getMissionStatusText(mission.status)}</span>
+                    </div>
+                    <div class="mission-details">
+                        <div class="mission-detail">📅 ${mission.date || 'Date à définir'}</div>
+                        <div class="mission-detail">⏰ ${mission.time || 'Horaire à définir'}</div>
+                        <div class="mission-detail">📍 ${mission.address || mamanData.city}</div>
+                        <div class="mission-detail">💰 ${mission.hourlyRate || mamanData.hourlyRate} €/h</div>
+                        <div class="mission-detail">⏱️ ${mission.duration || '2h'}</div>
+                    </div>
+                    ${mission.status === 'pending' ? `
+                        <div class="mission-actions">
+                            <button class="btn btn-success" onclick="acceptMission(${mission.id})">✅ Accepter</button>
+                            <button class="btn btn-danger" onclick="declineMission(${mission.id})">❌ Refuser</button>
+                        </div>
+                    ` : ''}
+                    ${mission.status === 'accepted' ? `
+                        <div class="mission-actions">
+                            <button class="btn btn-primary" onclick="startMission(${mission.id})">▶️ Démarrer</button>
+                            <button class="btn btn-secondary" onclick="viewMissionDetails(${mission.id})">📋 Détails</button>
+                        </div>
+                    ` : ''}
+                    ${mission.status === 'completed' ? `
+                        <div class="mission-actions">
+                            <button class="btn btn-secondary" onclick="viewMissionDetails(${mission.id})">📋 Voir le récapitulatif</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function renderCalendar() {
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            
+            let calendarHtml = `<h4>${today.toLocaleString('fr-FR', { month: 'long', year: 'numeric' })}</h4>`;
+            calendarHtml += '<div class="calendar-grid">';
+            const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            days.forEach(day => { calendarHtml += `<div style="text-align:center; font-weight:bold;">${day}</div>`; });
+            
+            for (let i = 0; i < firstDay.getDay() - 1; i++) {
+                calendarHtml += '<div></div>';
+            }
+            
+            for (let d = 1; d <= lastDay.getDate(); d++) {
+                const hasMission = missions.some(m => new Date(m.date).getDate() === d);
+                calendarHtml += `<div class="calendar-day ${hasMission ? 'has-mission' : ''}" onclick="viewDayMissions(${d})">
+                    <div class="calendar-day-number">${d}</div>
+                </div>`;
+            }
+            calendarHtml += '</div>';
+            document.getElementById('calendar').innerHTML = calendarHtml;
+        }
+
+        function renderProfile() {
+            const profileHtml = `
+                <div class="info-row"><div class="info-label">Nom complet :</div><div class="info-value">${mamanData.fullName}</div></div>
+                <div class="info-row"><div class="info-label">Email :</div><div class="info-value">${mamanData.email}</div></div>
+                <div class="info-row"><div class="info-label">Téléphone :</div><div class="info-value">${mamanData.phone}</div></div>
+                <div class="info-row"><div class="info-label">Adresse :</div><div class="info-value">${mamanData.address || 'Non renseignée'}</div></div>
+                <div class="info-row"><div class="info-label">Ville :</div><div class="info-value">${mamanData.city} (${mamanData.postalCode})</div></div>
+                <div class="info-row"><div class="info-label">Expérience :</div><div class="info-value">${mamanData.experience}</div></div>
+                <div class="info-row"><div class="info-label">Présentation :</div><div class="info-value">${mamanData.bio || 'Non renseignée'}</div></div>
+                <div class="info-row"><div class="info-label">Date d'inscription :</div><div class="info-value">${new Date(mamanData.createdAt).toLocaleDateString('fr-FR')}</div></div>
+            `;
+            document.getElementById('profileInfo').innerHTML = profileHtml;
+
+            // Disponibilités
+            let dispoHtml = `<div class="info-row"><div class="info-label">Jours :</div><div class="info-value">${mamanData.disponibilites?.join(', ') || 'Aucune'}</div></div>`;
+            dispoHtml += `<div class="info-row"><div class="info-label">Plage horaire :</div><div class="info-value">${mamanData.timeSlot || 'Non renseignée'}</div></div>`;
+            document.getElementById('disponibilitesInfo').innerHTML = dispoHtml;
+
+            // Compétences
+            let competencesHtml = '<div class="info-row"><div class="info-label">Compétences :</div><div class="info-value">';
+            if (mamanData.competences?.length > 0) {
+                mamanData.competences.forEach(comp => {
+                    competencesHtml += `<span class="skill-tag">${comp}</span>`;
+                });
+            } else {
+                competencesHtml += 'Aucune';
+            }
+            competencesHtml += '</div></div>';
+            competencesHtml += `<div class="info-row"><div class="info-label">Taux horaire :</div><div class="info-value">${mamanData.hourlyRate} €/h</div></div>`;
+            document.getElementById('competencesInfo').innerHTML = competencesHtml;
+        }
+
+        function renderDocuments() {
+            if (documents.length === 0) {
+                document.getElementById('documentsList').innerHTML = '<div class="empty-state">📄 Aucun document pour le moment</div>';
+                return;
+            }
+            document.getElementById('documentsList').innerHTML = documents.map(doc => `
+                <div style="padding: 15px; border-bottom: 1px solid #eee;">
+                    <strong>${doc.name}</strong> - ${doc.type} - ${new Date(doc.uploadDate).toLocaleDateString()}
+                    <button class="btn btn-secondary" style="margin-left: 10px;" onclick="viewDocument(${doc.id})">👁️ Voir</button>
+                </div>
+            `).join('');
+        }
+
+        function renderTrainings() {
+            document.getElementById('trainingsList').innerHTML = trainings.map(t => `
+                <div style="padding: 15px; border-bottom: 1px solid #eee;">
+                    <strong>${t.title}</strong> (${t.duration})
+                    <span class="status-badge" style="margin-left: 10px; background: ${t.status === 'disponible' ? '#4caf50' : '#999'}">
+                        ${t.status === 'disponible' ? 'Disponible' : 'Complété'}
+                    </span>
+                    ${t.status === 'disponible' ? `<button class="btn btn-primary" style="margin-left: 10px;" onclick="startTraining(${t.id})">🎓 Commencer</button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function renderMessages() {
+            if (messages.length === 0) {
+                document.getElementById('messagesList').innerHTML = '<div class="empty-state">💬 Aucun message</div>';
+                return;
+            }
+            document.getElementById('messagesList').innerHTML = messages.map(m => `
+                <div style="padding: 15px; border-bottom: 1px solid #eee;">
+                    <strong>📧 ${m.subject}</strong> - ${new Date(m.date).toLocaleString()}
+                    <p>${m.content}</p>
+                    ${m.reply ? `<p style="background:#f0f0f0; padding:10px; margin-top:10px;"><strong>Réponse admin :</strong> ${m.reply}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function renderEarnings() {
+            const currentMonth = new Date().getMonth();
+            const currentWeek = getWeekNumber(new Date());
+            
+            const monthEarnings = payments.filter(p => new Date(p.date).getMonth() === currentMonth).reduce((sum, p) => sum + p.amount, 0);
+            const weekEarnings = payments.filter(p => getWeekNumber(new Date(p.date)) === currentWeek).reduce((sum, p) => sum + p.amount, 0);
+            
+            document.getElementById('monthEarnings').textContent = monthEarnings + ' €';
+            document.getElementById('weekEarnings').textContent = weekEarnings + ' €';
+            
+            document.getElementById('paymentsHistory').innerHTML = payments.length === 0 ? '<div class="empty-state">💰 Aucun paiement pour le moment</div>' :
+                payments.map(p => `
+                    <div style="padding: 15px; border-bottom: 1px solid #eee;">
+                        <strong>${new Date(p.date).toLocaleDateString()}</strong> - ${p.description} : ${p.amount} €
+                        <span class="status-badge" style="background: #4caf50;">Payé</span>
+                    </div>
+                `).join('');
+        }
+
+        // Actions
+        function acceptMission(id) {
+            showNotification('Mission acceptée ! Vous recevrez les détails sous peu.', 'success');
+            saveMissionStatus(id, 'accepted');
+        }
+
+        function declineMission(id) {
+            showNotification('Mission refusée.', 'info');
+            saveMissionStatus(id, 'cancelled');
+        }
+
+        function startMission(id) {
+            showNotification('Mission démarrée ! Bon courage !', 'success');
+            saveMissionStatus(id, 'in_progress');
+        }
+
+        function saveMissionStatus(id, status) {
+            let allMissions = JSON.parse(localStorage.getItem('menagepro_missions') || '[]');
+            const index = allMissions.findIndex(m => m.id === id);
+            if (index !== -1) {
+                allMissions[index].status = status;
+                localStorage.setItem('menagepro_missions', JSON.stringify(allMissions));
+                loadMissions();
+                renderMissions();
+            }
+        }
+
+        function viewMissionDetails(id) {
+            const mission = missions.find(m => m.id === id);
+            alert(`Détails de la mission :\n${JSON.stringify(mission, null, 2)}`);
+        }
+
+        function viewDayMissions(day) {
+            const dayMissions = missions.filter(m => new Date(m.date).getDate() === day);
+            if (dayMissions.length === 0) {
+                showNotification('Aucune mission ce jour', 'info');
+            } else {
+                showNotification(`${dayMissions.length} mission(s) ce jour`, 'success');
+            }
+        }
+
+        // Modals
+        function openEditProfileModal() {
+            document.getElementById('editFullName').value = mamanData.fullName;
+            document.getElementById('editPhone').value = mamanData.phone;
+            document.getElementById('editAddress').value = mamanData.address || '';
+            document.getElementById('editBio').value = mamanData.bio || '';
+            document.getElementById('editProfileModal').style.display = 'flex';
+        }
+
+        function openEditDisponibilitesModal() {
+            const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+            const dispoHtml = days.map(day => `
+                <div class="checkbox-item">
+                    <input type="checkbox" value="${day}" id="dispo_${day}" ${mamanData.disponibilites?.includes(day) ? 'checked' : ''}>
+                    <label for="dispo_${day}">${day}</label>
+                </div>
+            `).join('');
+            document.getElementById('dispoDays').innerHTML = dispoHtml;
+            document.getElementById('editTimeSlot').value = mamanData.timeSlot || 'Flexible';
+            document.getElementById('editDisponibilitesModal').style.display = 'flex';
+        }
+
+        function openEditCompetencesModal() {
+            const competencesList = ['Nettoyage standard', 'Repassage', 'Cuisine', 'Nettoyage vitres', 'Ménage de printemps', "Garde d'enfants"];
+            const competencesHtml = competencesList.map(comp => `
+                <div class="checkbox-item">
+                    <input type="checkbox" value="${comp}" id="comp_${comp}" ${mamanData.competences?.includes(comp) ? 'checked' : ''}>
+                    <label for="comp_${comp}">${comp}</label>
+                </div>
+            `).join('');
+            document.getElementById('competencesCheckboxes').innerHTML = competencesHtml;
+            document.getElementById('editHourlyRate').value = mamanData.hourlyRate;
+            document.getElementById('editCompetencesModal').style.display = 'flex';
+        }
+
+        function openAddDocumentModal() {
+            const docName = prompt("Nom du document :");
+            if (docName) {
+                const newDoc = {
+                    id: Date.now(),
+                    mamanId: mamanData.id,
+                    name: docName,
+                    type: "PDF",
+                    uploadDate: new Date().toISOString()
+                };
+                let allDocs = JSON.parse(localStorage.getItem('menagepro_documents') || '[]');
+                allDocs.push(newDoc);
+                localStorage.setItem('menagepro_documents', JSON.stringify(allDocs));
+                loadDocuments();
+                renderDocuments();
+                showNotification('Document ajouté avec succès', 'success');
+            }
+        }
+
+        function openSendMessageModal() {
+            document.getElementById('sendMessageModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Form submissions
+        document.getElementById('editProfileForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let mamans = JSON.parse(localStorage.getItem('menagepro_mamans') || '[]');
+            const index = mamans.findIndex(m => m.id === mamanData.id);
+            if (index !== -1) {
+                mamans[index].fullName = document.getElementById('editFullName').value;
+                mamans[index].phone = document.getElementById('editPhone').value;
+                mamans[index].address = document.getElementById('editAddress').value;
+                mamans[index].bio = document.getElementById('editBio').value;
+                localStorage.setItem('menagepro_mamans', JSON.stringify(mamans));
+                mamanData = mamans[index];
+                showNotification('Profil mis à jour', 'success');
+                closeModal('editProfileModal');
+                renderProfile();
+                renderDashboard();
+            }
+        });
+
+        document.getElementById('editDisponibilitesForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const selectedDays = [];
+            document.querySelectorAll('#dispoDays input:checked').forEach(cb => selectedDays.push(cb.value));
+            let mamans = JSON.parse(localStorage.getItem('menagepro_mamans') || '[]');
+            const index = mamans.findIndex(m => m.id === mamanData.id);
+            if (index !== -1) {
+                mamans[index].disponibilites = selectedDays;
+                mamans[index].timeSlot = document.getElementById('editTimeSlot').value;
+                localStorage.setItem('menagepro_mamans', JSON.stringify(mamans));
+                mamanData = mamans[index];
+                showNotification('Disponibilités mises à jour', 'success');
+                closeModal('editDisponibilitesModal');
+                renderProfile();
+            }
+        });
+
+        document.getElementById('editCompetencesForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const selectedCompetences = [];
+            document.querySelectorAll('#competencesCheckboxes input:checked').forEach(cb => selectedCompetences.push(cb.value));
+            let mamans = JSON.parse(localStorage.getItem('menagepro_mamans') || '[]');
+            const index = mamans.findIndex(m => m.id === mamanData.id);
+            if (index !== -1) {
+                mamans[index].competences = selectedCompetences;
+                mamans[index].hourlyRate = parseFloat(document.getElementById('editHourlyRate').value);
+                localStorage.setItem('menagepro_mamans', JSON.stringify(mamans));
+                mamanData = mamans[index];
+                showNotification('Compétences mises à jour', 'success');
+                closeModal('editCompetencesModal');
+                renderProfile();
+            }
+        });
+
+        document.getElementById('sendMessageForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newMessage = {
+                id: Date.now(),
+                mamanId: mamanData.id,
+                subject: document.getElementById('messageSubject').value,
+                content: document.getElementById('messageContent').value,
+                date: new Date().toISOString(),
+                reply: null
+            };
+            let allMessages = JSON.parse(localStorage.getItem('menagepro_messages') || '[]');
+            allMessages.push(newMessage);
+            localStorage.setItem('menagepro_messages', JSON.stringify(allMessages));
+            loadMessages();
+            renderMessages();
+            showNotification('Message envoyé', 'success');
+            closeModal('sendMessageModal');
+            document.getElementById('sendMessageForm').reset();
+        });
+
+        function startTraining(id) {
+            showNotification('Formation commencée ! Bon apprentissage.', 'success');
+            const index = trainings.findIndex(t => t.id === id);
+            if (index !== -1) trainings[index].status = 'in_progress';
+            renderTrainings();
+        }
+
+        function viewDocument(id) {
+            showNotification('Document ouvert (simulation)', 'info');
+        }
+
+        function getMissionStatusText(status) {
+            const statusMap = {
+                'pending': '⏳ En attente',
+                'accepted': '✅ Acceptée',
+                'in_progress': '🔄 En cours',
+                'completed': '✔️ Terminée',
+                'cancelled': '❌ Annulée'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getWeekNumber(date) {
+            const d = new Date(date);
+            d.setHours(0,0,0);
+            d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+            const week1 = new Date(d.getFullYear(), 0, 4);
+            return 1 + Math.round(((d - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.background = type === 'success' ? '#4caf50' : '#ff9800';
+            notification.style.color = 'white';
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function logout() {
+            sessionStorage.removeItem('menagepro_current_maman');
+            window.location.href = 'login-maman.html';
+        }
+
+        // Style pour les tab-panes
+        const style = document.createElement('style');
+        style.textContent = `
+            .tab-pane { display: none; }
+            .tab-pane.active { display: block; }
+            .checkbox-item { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+        `;
+        document.head.appendChild(style);
+
+        // Démarrer
+        init();
+    </script>
+</body>
+</html>
