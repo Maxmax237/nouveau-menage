@@ -28,25 +28,23 @@
             width: 100%;
             max-width: 450px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: slideIn 0.5s ease-out;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .back-home {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .back-home a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
         }
 
         h1 {
             text-align: center;
             color: #333;
             margin-bottom: 10px;
-            font-size: 28px;
         }
 
         .subtitle {
@@ -74,13 +72,11 @@
             border-radius: 10px;
             font-size: 16px;
             transition: all 0.3s;
-            font-family: inherit;
         }
 
         input:focus, select:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         button {
@@ -93,16 +89,11 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s;
         }
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
         }
 
         .message {
@@ -111,31 +102,22 @@
             border-radius: 8px;
             text-align: center;
             font-size: 14px;
+            display: none;
         }
 
         .error {
             background: #fee;
             color: #c33;
-            border-left: 4px solid #c33;
         }
 
         .success {
             background: #efe;
             color: #3c3;
-            border-left: 4px solid #3c3;
-        }
-
-        .info {
-            background: #e3f2fd;
-            color: #1976d2;
-            border-left: 4px solid #1976d2;
         }
 
         .login-link {
             text-align: center;
             margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
         }
 
         .login-link a {
@@ -143,25 +125,16 @@
             text-decoration: none;
             font-weight: 600;
         }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        .password-strength {
-            margin-top: 5px;
-            font-size: 12px;
-        }
-
-        .strength-weak { color: #f44336; }
-        .strength-medium { color: #ff9800; }
-        .strength-strong { color: #4caf50; }
     </style>
 </head>
 <body>
     <div class="register-container">
+        <div class="back-home">
+            <a href="index.html">← Retour à l'accueil</a>
+        </div>
+        
         <h1>📝 Créer un compte Admin</h1>
-        <div class="subtitle">Inscrivez-vous pour accéder au tableau de bord</div>
+        <div class="subtitle">Seuls les super admins peuvent créer des comptes</div>
 
         <form id="registerForm">
             <div class="form-group">
@@ -177,7 +150,6 @@
             <div class="form-group">
                 <label>Mot de passe</label>
                 <input type="password" id="password" placeholder="Au moins 6 caractères" required>
-                <div class="password-strength" id="passwordStrength"></div>
             </div>
 
             <div class="form-group">
@@ -196,7 +168,7 @@
             <button type="submit">Créer mon compte</button>
         </form>
 
-        <div id="message" class="message" style="display: none;"></div>
+        <div id="message" class="message"></div>
 
         <div class="login-link">
             Déjà un compte ? <a href="login.html">Se connecter</a>
@@ -204,39 +176,29 @@
     </div>
 
     <script>
-        // Fonction pour évaluer la force du mot de passe
-        function checkPasswordStrength(password) {
-            const strengthDiv = document.getElementById('passwordStrength');
-            if (password.length === 0) {
-                strengthDiv.textContent = '';
-                return;
-            }
-            
-            let strength = 0;
-            if (password.length >= 6) strength++;
-            if (password.length >= 8) strength++;
-            if (/[A-Z]/.test(password)) strength++;
-            if (/[0-9]/.test(password)) strength++;
-            if (/[^A-Za-z0-9]/.test(password)) strength++;
-            
-            if (strength <= 2) {
-                strengthDiv.textContent = '🔴 Faible';
-                strengthDiv.className = 'password-strength strength-weak';
-            } else if (strength <= 4) {
-                strengthDiv.textContent = '🟡 Moyen';
-                strengthDiv.className = 'password-strength strength-medium';
-            } else {
-                strengthDiv.textContent = '🟢 Fort';
-                strengthDiv.className = 'password-strength strength-strong';
-            }
+        // Vérifier si l'utilisateur connecté est super admin
+        function isSuperAdmin() {
+            const currentAdmin = sessionStorage.getItem('menagepro_current_admin');
+            if (!currentAdmin) return false;
+            const admin = JSON.parse(currentAdmin);
+            return admin.role === 'super_admin';
         }
 
-        // Écouter les changements du mot de passe
-        document.getElementById('password').addEventListener('input', (e) => {
-            checkPasswordStrength(e.target.value);
-        });
+        // Si pas de super admin, permettre la création du premier compte
+        function canCreateAdmin() {
+            let admins = JSON.parse(localStorage.getItem('menagepro_admins') || '[]');
+            // Si aucun admin n'existe, tout le monde peut créer le premier compte
+            if (admins.length === 0) return true;
+            // Sinon, seul un super admin connecté peut créer
+            return isSuperAdmin();
+        }
 
-        // Gestion de l'inscription
+        // Rediriger si pas autorisé
+        if (!canCreateAdmin()) {
+            alert("⚠️ Seuls les Super Administrateurs peuvent créer de nouveaux comptes admin.");
+            window.location.href = 'login.html';
+        }
+
         document.getElementById('registerForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
@@ -269,7 +231,7 @@
             
             // Vérifier si l'email existe déjà
             if (admins.some(admin => admin.email === email)) {
-                showMessage('Cet email est déjà utilisé. Veuillez vous connecter.', 'error');
+                showMessage('Cet email est déjà utilisé', 'error');
                 return;
             }
             
@@ -278,29 +240,20 @@
                 id: Date.now(),
                 fullName: fullName,
                 email: email,
-                password: password, // ⚠️ En production, hash le mot de passe !
+                password: password,
                 role: role,
-                createdAt: new Date().toISOString(),
-                status: 'active'
+                status: 'active',
+                createdAt: new Date().toISOString()
             };
             
             // Ajouter à la liste
             admins.push(newAdmin);
             localStorage.setItem('menagepro_admins', JSON.stringify(admins));
             
-            // Connecter automatiquement
-            sessionStorage.setItem('menagepro_current_admin', JSON.stringify({
-                id: newAdmin.id,
-                fullName: newAdmin.fullName,
-                email: newAdmin.email,
-                role: newAdmin.role
-            }));
+            showMessage('✅ Compte admin créé avec succès !', 'success');
             
-            showMessage('✅ Compte créé avec succès ! Redirection...', 'success');
-            
-            // Rediriger vers l'admin
             setTimeout(() => {
-                window.location.href = 'admin-dashboard.html';
+                window.location.href = 'login.html';
             }, 1500);
         });
         
@@ -313,12 +266,6 @@
             setTimeout(() => {
                 messageDiv.style.display = 'none';
             }, 3000);
-        }
-        
-        // Vérifier si déjà connecté
-        const currentAdmin = sessionStorage.getItem('menagepro_current_admin');
-        if (currentAdmin) {
-            window.location.href = 'admin-dashboard.html';
         }
     </script>
 </body>
