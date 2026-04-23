@@ -1,0 +1,32 @@
+<!-- Dans la barre d'actions admin -->
+<button id="sendMassSmsBtn" class="btn-sms">
+    <i class="fas fa-envelope"></i> Envoyer SMS groupé
+</button>
+
+<!-- Modal pour envoyer SMS -->
+<div id="smsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-envelope"></i> Envoyer un SMS groupé</h2>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <label>Destinataires :</label>
+            <select id="smsRecipients">
+                <option value="all">Toutes les inscrites</option>
+                <option value="active">Uniquement actives</option>
+                <option value="inactive">Uniquement inactives</option>
+                <option value="filtered">Filtrées actuelles</option>
+            </select>
+            
+            <label>Message :</label>
+            <textarea id="smsMessage" rows="5" placeholder="Votre message ici..."></textarea>
+            <small>160 caractères max par SMS (compteur: <span id="charCount">0</span>)</small>
+            
+            <div class="modal-buttons">
+                <button id="sendSmsBtn" class="btn-send-sms">📱 Envoyer SMS</button>
+                <button id="cancelSmsBtn" class="btn-cancel">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>

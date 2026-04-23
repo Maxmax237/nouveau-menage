@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MenagePro - Paiement sécurisé</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="payment-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-card">
+            <div class="payment-header">
+                <i class="fas fa-broom"></i>
+                <h1>MenagePro</h1>
+                <p>Paiement sécurisé de la commission</p>
+            </div>
+
+            <!-- Résumé de la commande -->
+            <div class="order-summary">
+                <h3>📋 Résumé de la prestation</h3>
+                <div class="summary-details">
+                    <div class="summary-row">
+                        <span>Femme de ménage :</span>
+                        <strong id="workerName">Marie Claire</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Durée :</span>
+                        <strong id="duration">4 heures</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tarif horaire :</span>
+                        <strong id="hourlyRate">2 500 FCFA</strong>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total à payer :</span>
+                        <strong id="totalAmount">10 000 FCFA</strong>
+                    </div>
+                    <div class="summary-row commission">
+                        <span>Commission MenagePro (10%) :</span>
+                        <strong id="commission">1 000 FCFA</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Méthodes de paiement -->
+            <div class="payment-methods">
+                <h3>💰 Choisissez votre moyen de paiement</h3>
+                
+                <div class="method-option" data-method="orange">
+                    <input type="radio" name="paymentMethod" id="orangeMoney" value="orange" checked>
+                    <label for="orangeMoney">
+                        <img src="https://upload.wikimedia.org/wikipedia/fr/thumb/2/2e/Orange_Money_logo.svg/1200px-Orange_Money_logo.svg.png" alt="Orange Money" class="method-logo">
+                        <span>Orange Money</span>
+                    </label>
+                </div>
+
+                <div class="method-option" data-method="mtn">
+                    <input type="radio" name="paymentMethod" id="mtnMoney" value="mtn">
+                    <label for="mtnMoney">
+                        <img src="https://upload.wikimedia.org/wikipedia/fr/thumb/6/69/MTN_Logo.svg/1200px-MTN_Logo.svg.png" alt="MTN Mobile Money" class="method-logo">
+                        <span>MTN Mobile Money</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Formulaire téléphone -->
+            <div class="phone-form">
+                <label for="phoneNumber">📱 Numéro de téléphone (format: 6XXXXXXXX)</label>
+                <input type="tel" id="phoneNumber" placeholder="Ex: 690001122" maxlength="9" required>
+                <small>Le numéro doit être actif sur le réseau choisi</small>
+            </div>
+
+            <!-- Code promo -->
+            <div class="promo-code">
+                <input type="text" id="promoCode" placeholder="🎁 Code promo (optionnel)">
+                <button id="applyPromoBtn" class="btn-promo">Appliquer</button>
+            </div>
+
+            <!-- Bouton paiement -->
+            <button id="payBtn" class="btn-pay">
+                <i class="fas fa-lock"></i> Payer maintenant
+            </button>
+
+            <!-- Sécurisé -->
+            <div class="secure-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Paiement 100% sécurisé</span>
+            </div>
+        </div>
+
+        <!-- Modal confirmation -->
+        <div id="confirmationModal" class="modal">
+            <div class="modal-content payment-modal">
+                <div class="modal-header">
+                    <h2><i class="fas fa-check-circle"></i> Paiement en cours</h2>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Veuillez vérifier votre téléphone et saisir le code reçu...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="payment.js"></script>
+</body>
+</html>

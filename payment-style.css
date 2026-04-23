@@ -1,0 +1,225 @@
+.payment-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.payment-card {
+    background: white;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 100%;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.payment-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.payment-header i {
+    font-size: 50px;
+    color: #667eea;
+}
+
+.payment-header h1 {
+    color: #333;
+    margin: 10px 0;
+}
+
+.order-summary {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.order-summary h3 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.summary-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.summary-row.total {
+    border-top: 2px solid #667eea;
+    border-bottom: none;
+    margin-top: 10px;
+    padding-top: 15px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.summary-row.commission {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.payment-methods {
+    margin-bottom: 25px;
+}
+
+.payment-methods h3 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.method-option {
+    margin: 10px 0;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.method-option:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.method-option input[type="radio"] {
+    margin-right: 10px;
+}
+
+.method-option label {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+}
+
+.method-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.phone-form {
+    margin-bottom: 20px;
+}
+
+.phone-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.phone-form input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.phone-form input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.promo-code {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.promo-code input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+}
+
+.btn-promo {
+    padding: 12px 20px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-promo:hover {
+    background: #5a6268;
+}
+
+.btn-pay {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-pay:hover {
+    transform: translateY(-2px);
+}
+
+.secure-badge {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+.secure-badge i {
+    color: #10b981;
+    margin-right: 5px;
+}
+
+.payment-modal {
+    max-width: 400px;
+    text-align: center;
+}
+
+.loading-spinner i {
+    font-size: 50px;
+    color: #667eea;
+}
+
+.loading-spinner p {
+    margin-top: 20px;
+    color: #666;
+}
+
+.success-icon {
+    font-size: 60px;
+    color: #10b981;
+}
+
+.error-icon {
+    font-size: 60px;
+    color: #ef4444;
+}
+
+@media (max-width: 600px) {
+    .payment-card {
+        padding: 20px;
+    }
+    
+    .promo-code {
+        flex-direction: column;
+    }
+}

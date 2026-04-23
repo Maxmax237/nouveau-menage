@@ -1,0 +1,36 @@
+/* Ajouter dans style.css */
+.photo-upload-area {
+    text-align: center;
+    padding: 20px;
+    border: 2px dashed #ddd;
+    border-radius: 10px;
+    margin: 15px 0;
+}
+
+.photo-upload-area img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.upload-progress {
+    margin-top: 10px;
+}
+
+.upload-progress progress {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+}
+
+.photo-preview {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.photo-preview img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #667eea;
+}

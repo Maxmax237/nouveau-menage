@@ -1,0 +1,42 @@
+<!-- Dans la page d'inscription -->
+<div class="photo-section">
+    <label>📸 Photo de profil (optionnel)</label>
+    <div class="photo-preview" id="photoPreview">
+        <img id="previewImg" src="https://via.placeholder.com/150" alt="Aperçu">
+    </div>
+    <input type="file" id="profilePhoto" accept="image/*" capture="environment">
+    <small>Téléchargez une photo pour augmenter vos chances d'être choisie</small>
+</div>
+
+<script>
+// Preview photo avant upload
+document.getElementById('profilePhoto').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            document.getElementById('previewImg').src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Dans la fonction inscriptionFemme()
+async function inscriptionFemme(data) {
+    let photoUrl = '';
+    
+    // Upload photo si présente
+    const photoFile = document.getElementById('profilePhoto').files[0];
+    if (photoFile) {
+        const storageRef = ref(storage, `women_photos/${Date.now()}_${photoFile.name}`);
+        await uploadBytes(storageRef, photoFile);
+        photoUrl = await getDownloadURL(storageRef);
+    }
+    
+    // Sauvegarder avec photoUrl
+    await addDoc(collection(db, "women"), {
+        // ... autres champs
+        photoUrl: photoUrl
+    });
+}
+</script>

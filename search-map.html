@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MenagePro - Trouver une femme de ménage près de chez vous</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        #searchInput {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+        
+        .worker-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .worker-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .worker-info {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .worker-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .worker-details {
+            flex: 1;
+        }
+        
+        .worker-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .worker-distance {
+            color: #667eea;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .worker-rating {
+            color: #fbbf24;
+            margin-top: 5px;
+        }
+        
+        .book-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .results-container {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .distance-badge {
+            background: #10b981;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1><i class="fas fa-map-marker-alt"></i> Trouvez une femme de ménage près de chez vous</h1>
+        </header>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Entrez votre adresse ou ville (ex: Douala, Yaoundé)">
+            <button id="searchBtn" class="btn-pay" style="margin-top: 10px;">🔍 Rechercher</button>
+        </div>
+        
+        <div id="map"></div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div>
+                    <div class="stat-value" id="nearbyCount">0</div>
+                    <div class="stat-label">Femmes à proximité</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <div>
+                    <div class="stat-value" id="avgDistance">0 km</div>
+                    <div class="stat-label">Distance moyenne</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="results-container" id="resultsContainer">
+            <!-- Résultats dynamiques -->
+        </div>
+    </div>
+    
+    <!-- Modal réservation -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📅 Réserver une prestation</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="bookingForm">
+                <input type="hidden" id="bookingWorkerId">
+                <label>Nom de la prestataire :</label>
+                <input type="text" id="bookingWorkerName" readonly>
+                
+                <label>Date :</label>
+                <input type="date" id="bookingDate" required>
+                
+                <label>Heure :</label>
+                <input type="time" id="bookingTime" required>
+                
+                <label>Durée (heures) :</label>
+                <select id="bookingHours">
+                    <option value="2">2 heures</option>
+                    <option value="3">3 heures</option>
+                    <option value="4" selected>4 heures</option>
+                    <option value="6">6 heures</option>
+                    <option value="8">8 heures</option>
+                </select>
+                
+                <label>Adresse précise :</label>
+                <textarea id="bookingAddress" rows="3" required placeholder="Votre adresse complète..."></textarea>
+                
+                <label>Instructions spéciales :</label>
+                <textarea id="bookingInstructions" rows="2" placeholder="Produits à utiliser, zones prioritaires..."></textarea>
+                
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-pay">💰 Confirmer et payer</button>
+                    <button type="button" class="btn-cancel">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=TA_CLE_API_GOOGLE&libraries=places&callback=initMap" async defer></script>
+    <script type="module" src="search-map.js"></script>
+</body>
+</html>
