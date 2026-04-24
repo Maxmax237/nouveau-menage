@@ -3,244 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MenagePro - Connexion Candidat</title>
+    <title>Connexion - MenagePro</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             padding: 20px;
         }
-
         .login-container {
-            <div class="back-home" style="text-align: center; margin-bottom: 20px;">
-    <a href="index.html" style="color: #667eea; text-decoration: none;">← Retour à l'accueil</a>
-</div>
             background: white;
             border-radius: 20px;
             padding: 40px;
             width: 100%;
             max-width: 400px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: slideIn 0.5s ease-out;
         }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
-
+        .back-home { text-align: center; margin-bottom: 20px; }
+        .back-home a { color: #f5576c; text-decoration: none; }
+        h1 { text-align: center; color: #333; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; }
         input {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 16px;
-            transition: all 0.3s;
         }
-
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
+        input:focus { outline: none; border-color: #f5576c; }
         button {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
             border: none;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
         }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .message {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 14px;
-            display: none;
-        }
-
-        .error {
-            background: #fee;
-            color: #c33;
-            border-left: 4px solid #c33;
-        }
-
-        .success {
-            background: #efe;
-            color: #3c3;
-            border-left: 4px solid #3c3;
-        }
-
-        .register-link {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .register-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .demo-info {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f5f5f5;
-            border-radius: 10px;
-            font-size: 13px;
-            color: #666;
-        }
+        .message { margin-top: 15px; padding: 12px; border-radius: 8px; text-align: center; display: none; }
+        .error { background: #fee; color: #c33; }
+        .success { background: #efe; color: #3c3; }
+        .register-link { text-align: center; margin-top: 20px; }
+        .register-link a { color: #f5576c; text-decoration: none; font-weight: 600; }
+        .info { margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 10px; font-size: 13px; color: #666; }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h1>🧹 Connexion Candidat</h1>
-        <div class="subtitle">Accédez à votre espace personnel</div>
-
+        <div class="back-home"><a href="../index.html">← Accueil</a></div>
+        <h1>🔐 Espace Candidat</h1>
+        <div class="subtitle">Connectez-vous à votre compte</div>
         <form id="loginForm">
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="email" required placeholder="votre@email.com">
-            </div>
-
-            <div class="form-group">
-                <label>Mot de passe</label>
-                <input type="password" id="password" required placeholder="Votre mot de passe">
-            </div>
-
+            <div class="form-group"><label>Email</label><input type="email" id="email" required></div>
+            <div class="form-group"><label>Mot de passe</label><input type="password" id="password" required></div>
             <button type="submit">Se connecter</button>
         </form>
-
         <div id="message" class="message"></div>
-
-        <div class="register-link">
-            Pas encore inscrite ? <a href="register-maman.html">Postuler maintenant</a><br>
-            <small style="color: #999;">👋 Administrateur ? <a href="login.html">Connexion admin</a></small>
-        </div>
-
-        <div class="demo-info">
-            <strong>ℹ️ Après inscription :</strong><br>
-            • Votre dossier sera examiné par l'administrateur<br>
-            • Vous recevrez une notification par email<br>
-            • Vous pourrez consulter vos missions
-        </div>
+        <div class="register-link"><a href="register.html">Pas encore inscrite ? Postuler maintenant</a></div>
+        <div class="info">📝 Après inscription, votre dossier sera examiné par notre équipe</div>
     </div>
-
     <script>
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
-            const messageDiv = document.getElementById('message');
-            
-            if (!email || !password) {
-                showMessage('Veuillez remplir tous les champs', 'error');
-                return;
-            }
-            
-            // Récupérer les mamans
             let mamans = JSON.parse(localStorage.getItem('menagepro_mamans') || '[]');
-            
-            // Chercher la maman
             const maman = mamans.find(m => m.email === email && m.password === password);
-            
             if (maman) {
-                // Vérifier le statut
                 if (maman.status === 'refusee') {
-                    showMessage('❌ Votre candidature a été refusée. Contactez l\'administrateur.', 'error');
-                    return;
+                    return showMessage('❌ Votre candidature a été refusée', 'error');
                 }
-                
-                // Connecter la maman
-                sessionStorage.setItem('menagepro_current_maman', JSON.stringify({
-                    id: maman.id,
-                    fullName: maman.fullName,
-                    email: maman.email,
-                    status: maman.status
-                }));
-                
-                showMessage('✅ Connexion réussie ! Redirection...', 'success');
-                
-                setTimeout(() => {
-                    window.location.href = 'dashboard-maman.html';
-                }, 1000);
+                sessionStorage.setItem('menagepro_current_maman', JSON.stringify(maman));
+                showMessage('✅ Connexion réussie !', 'success');
+                setTimeout(() => window.location.href = 'dashboard.html', 1000);
             } else {
                 showMessage('❌ Email ou mot de passe incorrect', 'error');
             }
         });
-        
         function showMessage(text, type) {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
-            messageDiv.style.display = 'block';
-            
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 3000);
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 3000);
         }
-        
-        // Vérifier si déjà connecté
-        const currentMaman = sessionStorage.getItem('menagepro_current_maman');
-        if (currentMaman) {
-            window.location.href = 'dashboard-maman.html';
-        }
+        if (sessionStorage.getItem('menagepro_current_maman')) window.location.href = 'dashboard.html';
     </script>
 </body>
 </html>
